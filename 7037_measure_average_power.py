@@ -1,8 +1,6 @@
 #See https://docs.python.org/3/library/socket.html for documentation on python socket library
-
 #The purpose of this script is to demonstrate the correct order of operations for using SCPI commands to get reliable measurements from the Bird pulse sensor via ethernet bridge
-
-#The sequency of operations in this script follow those outlined by the block diagram in the Recommended Procedure for Pulse Sensor Measurements document which should be included in this package
+#The sequency of operations in this script follow those outlined by the block diagram in the Recommended Procedure for Pulse Sensor CW Measurements document which should be included in this package
 
 import time
 import socket
@@ -20,7 +18,7 @@ def readResponse():
     return resp.decode()
 
 #Corresponds to the *STB? query and what to do depending on the answer.
-#See Recommended Procedure for Pulse Sensor Measurements document for important bits and more details
+#See Recommended Procedure for Pulse Sensor CW Measurements document for important bits and more details
 def readStatusByte():
     sendSCPIcommand('*STB?') #Reads the status byte
     ans = int(readResponse())
@@ -52,7 +50,7 @@ if __name__ == '__main__':
         sock.connect((IP, 5025))
 
     #This is where the recommended sequence of SCPI commands begins
-    #Sequence corresponds to the Recommended Procedure for Pulse Sensor Measurements flow chart
+    #Sequence corresponds to the Recommended Procedure for Pulse Sensor CW Measurements flow chart
 
     sendSCPIcommand('*RST') #Resturn the sensor to its default configuration settings
 
@@ -76,10 +74,10 @@ if __name__ == '__main__':
         if powerMeas.lower() == 'exit':
             break
         else:
-            sendSCPIcommand('FETC:FORW:AVER?') # reads the forward average power of the RF signal last measured by the sensor
+            sendSCPIcommand('FETC:FORW:AVER?') #Reads the forward average power of the RF signal last measured by the sensor
             answer = readResponse()
             print('\tForward Power = ' + answer.strip() + ' Watts\n')
 
-            sendSCPIcommand('FETC:REFL:AVER?') # reads the reflected average power of the RF signal last measured by the sensor
+            sendSCPIcommand('FETC:REFL:AVER?') #Reads the reflected average power of the RF signal last measured by the sensor
             answer = readResponse()
             print('\tReflected Power = ' + answer.strip() + ' Watts\n')
