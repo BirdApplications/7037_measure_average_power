@@ -36,14 +36,14 @@ def readStatusByte():
         while errorNumber > 0:
             sendSCPIcommand('SYST:ERR?')
             errorNumber = int(readResponse().split(',')[0])
-    elif ans & (1 << 3):
+    if ans & (1 << 3):
         sendSCPIcommand('STAT:QUES:COND?')
         questionableCondition = int(readResponse())
         if questionableCondition & (1 << 3):
             print('Note: Calibration not valid at measured frequency\n')
-        elif questionableCondition & (1 << 5):
+        if questionableCondition & (1 << 5):
             print('Note: Insufficient RF amplitude or duration to measure frequency\n') 
-        elif questionableCondition & (1 << 8):
+        if questionableCondition & (1 << 8):
             print('Note: Calibration not valid\n')
 
 if __name__ == ‘__main__’:
