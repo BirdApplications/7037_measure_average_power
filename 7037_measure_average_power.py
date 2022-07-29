@@ -45,7 +45,7 @@ if __name__ == '__main__':
     #Creates a socket connection between the computer and ethernet bridge
     #Connects computer to the bridge's IP address via port 5025 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    IP = input('Enter the IP address of the ethernet bridge (or press ENTER to set IP address to the default): ')
+    IP = input('Enter the IP address of the ethernet bridge (or press ENTER to set IP address to the default):\n')
     if IP == '':
         sock.connect(('192.168.1.151', 5025)) #Default IP address
     else:
@@ -71,12 +71,15 @@ if __name__ == '__main__':
 
         readStatusByte() #Handles the sequence beginning with the command *STB?
 
-        print('Type EXIT to end the program')
-        powerMeas = input('Press ENTER to make a measurement:')
+        powerMeas = input('Press ENTER to make a measurement or EXIT to end the program:\n')
 
         if powerMeas.lower() == 'exit':
             break
         else:
-            sendSCPIcommand('FETC:AVER?') # reads the average power of the RF signal last measured by the sensor
+            sendSCPIcommand('FETC:FORW:AVER?') # reads the forward average power of the RF signal last measured by the sensor
             answer = readResponse()
-            print(answer.strip() + ' Watts')
+            print('\tForward Power = ' + answer.strip() + ' Watts\n')
+
+            sendSCPIcommand('FETC:REFL:AVER?') # reads the reflected average power of the RF signal last measured by the sensor
+            answer = readResponse()
+            print('\tReflected Power = ' + answer.strip() + ' Watts\n')
